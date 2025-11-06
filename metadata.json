@@ -1,0 +1,7 @@
+{
+  "name": "Maya Voice Agent Onboarding",
+  "description": "An interactive voice-based onboarding experience powered by Gemini. The agent, Maya, guides users through the NxtWave program details in a conversational manner.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

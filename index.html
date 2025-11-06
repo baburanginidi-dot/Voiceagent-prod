@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maya Voice Agent Onboarding</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      @keyframes wave {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(2.5); opacity: 0; }
+      }
+      .wave-circle {
+        position: absolute;
+        border-radius: 50%;
+        border: 2px solid #38E3E1; /* Accent Aqua */
+        animation: wave 1.8s infinite cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      @keyframes listening-pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 20px 5px rgba(56, 227, 225, 0.2); }
+        50% { transform: scale(1.05); box-shadow: 0 0 30px 10px rgba(56, 227, 225, 0.4); }
+      }
+
+      @keyframes thinking-pulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+      }
+    </style>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body class="bg-gradient-to-b from-[#EAF4FF] to-[#F9FBFF]">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
