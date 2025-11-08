@@ -25,8 +25,9 @@ const getClientOrigin = () => {
   if (process.env.CLIENT_ORIGIN) {
     return process.env.CLIENT_ORIGIN;
   }
-  if (process.env.REPLIT_DOMAINS) {
-    return `https://${process.env.REPLIT_DOMAINS}`;
+  const replitDomain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS;
+  if (replitDomain) {
+    return `https://${replitDomain}`;
   }
   return 'http://localhost:5000';
 };

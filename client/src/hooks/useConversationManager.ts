@@ -4,7 +4,7 @@ import type { AgentState, Message, StageId } from '../types';
 import { getSessionMessages } from '../api/sessions';
 import { decodePCM16ToAudioBuffer, float32ToPCM16 } from '../utils/audioUtils';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL ?? 'http://localhost:4000';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL ?? '';
 const INPUT_SAMPLE_RATE = 16000;
 const BUFFER_SIZE = 2048;
 
