@@ -1,27 +1,18 @@
-import path from "path";
-import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react";
+import path from 'node:path';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, ".", "");
-  return {
-    server: {
-      port: 5000,
-      host: "0.0.0.0",
-      allowedHosts: [
-        "35238faa-addd-4b26-b020-1cc513ce2749-00-3t4bj0ksgeccr.sisko.replit.dev", // ✅ your current Replit host
-        "all" // ✅ fallback for future dynamic hosts
-      ],
+export default defineConfig({
+  root: path.resolve(__dirname),
+  server: {
+    port: 5173,
+    host: '0.0.0.0',
+    allowedHosts: ['11bdc89d-ee3a-40ac-8fd6-ab284936fd6d-00-b1jfvzdfu0qe.sisko.replit.dev'],
+  },
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
     },
-    plugins: [react()],
-    define: {
-      "process.env.API_KEY": JSON.stringify(env.GEMINI_API_KEY),
-      "process.env.GEMINI_API_KEY": JSON.stringify(env.GEMINI_API_KEY),
-    },
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "."),
-      },
-    },
-  };
+  },
 });

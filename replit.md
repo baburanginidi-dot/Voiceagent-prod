@@ -49,11 +49,14 @@ The application has been configured to run in the Replit environment:
 
 1. **Port Configuration**: Updated frontend from port 5173 to port 5000 for Replit compatibility
 2. **HMR Setup**: Added HMR client port configuration for hot module reloading
-3. **Environment Handling**: 
-   - Automatically detects REPLIT_DOMAINS for CLIENT_ORIGIN
+3. **Proxy Configuration**: Added Vite proxy for /api and /socket.io endpoints to backend
+4. **Host Allowance**: Configured `allowedHosts: true` to allow Replit proxy domain requests
+5. **Environment Handling**: 
+   - Automatically detects REPLIT_DEV_DOMAIN or REPLIT_DOMAINS for CLIENT_ORIGIN
    - Falls back to localhost:5000 for local development
-4. **Database Configuration**: Modified to use SQLite instead of Replit's default PostgreSQL
-5. **Build Fixes**: Rebuilt better-sqlite3 native module for Node.js 20 compatibility
+   - Client uses relative URLs for API and WebSocket connections (proxied through Vite)
+6. **Database Configuration**: Modified to use SQLite instead of Replit's default PostgreSQL
+7. **Build Fixes**: Rebuilt better-sqlite3 native module for Node.js 20 compatibility
 
 ## Environment Variables
 
