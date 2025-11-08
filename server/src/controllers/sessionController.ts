@@ -8,14 +8,14 @@ const sessionSchema = z.object({
   phone: z.string().min(8),
 });
 
-export const createSessionHandler: RequestHandler = (req, res) => {
+export const createSessionHandler: RequestHandler = async (req, res) => {
   const parseResult = sessionSchema.safeParse(req.body);
   if (!parseResult.success) {
     return res.status(400).json({ error: 'Invalid payload', issues: parseResult.error.flatten() });
   }
 
   try {
-    const session = createSession({
+    const session = await createSession({
       userName: parseResult.data.name,
       userPhone: parseResult.data.phone,
     });
@@ -33,24 +33,25 @@ export const createSessionHandler: RequestHandler = (req, res) => {
   }
 };
 
-export const listSessionsHandler: RequestHandler = (_req, res) => {
-  return res.json({ sessions: listSessions() });
+export const listSessionsHandler: RequestHandler = async (_req, res) => {
+  const sessions = await listSessions();
+  return res.json({ sessions });
 };
 
-export const getSessionHandler: RequestHandler = (req, res) => {
-  const session = getSession(req.params.sessionId);
+export const getSessionHandler: RequestHandler = async (req, res) => {
+  const session = await getSession(req.params.sessionId);
   if (!session) {
     return res.status(404).json({ error: 'Session not found' });
   }
   return res.json({ session });
 };
 
-export const getMessagesHandler: RequestHandler = (req, res) => {
-  const session = getSession(req.params.sessionId);
+export const getMessagesHandler: RequestHandler = async (req, res) => {
+  const session = await getSession(req.params.sessionId);
   if (!session) {
     return res.status(404).json({ error: 'Session not found' });
   }
-  const messages = getMessages(session.id, Number(req.query.limit) || 100);
+  const messages = await getMessages(session.id, Number(req.query.limit) || 100);
   return res.json({ messages });
 };
 
@@ -59,8 +60,8 @@ const messageSchema = z.object({
   text: z.string().min(1).optional(),
 });
 
-export const createMessageHandler: RequestHandler = (req, res) => {
-  const session = getSession(req.params.sessionId);
+export const createMessageHandler: RequestHandler = async (req, res) => {
+  const session = await getSession(req.params.sessionId);
   if (!session) {
     return res.status(404).json({ error: 'Session not found' });
   }
@@ -70,6 +71,6 @@ export const createMessageHandler: RequestHandler = (req, res) => {
     return res.status(400).json({ error: 'Invalid payload', issues: parseResult.error.flatten() });
   }
 
-  const message = upsertMessage(session.id, parseResult.data.speaker, parseResult.data.text);
+  const message = await upsertMessage(session.id, parseResult.data.speaker, parseResult.data.text);
   return res.status(201).json({ message });
 };

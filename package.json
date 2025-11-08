@@ -8,7 +8,8 @@
   },
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "shared"
   ],
   "scripts": {
     "dev": "concurrently -k -n server,client \"npm:dev:server\" \"npm:dev:client\"",
@@ -23,11 +24,17 @@
     "lint": "npm run lint:server && npm run lint:client",
     "lint:server": "npm --prefix server run lint",
     "lint:client": "npm --prefix client run lint",
+    "db:push": "drizzle-kit push",
     "docker": "docker-compose up --build",
     "docker:down": "docker-compose down"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "drizzle-kit": "^0.31.6",
+    "drizzle-orm": "^0.44.7",
+    "ws": "^8.18.3"
   }
 }
-

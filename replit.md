@@ -7,7 +7,7 @@ This is a full-stack voice AI assistant application featuring real-time voice in
 - **Frontend**: React + Vite client with WebSocket communication
 - **Backend**: Express server with Socket.IO for real-time bidirectional communication
 - **AI Integration**: Google Gemini API for voice processing and text-to-speech
-- **Database**: SQLite for session and message persistence
+- **Database**: PostgreSQL (Neon) for session and message persistence
 
 ## Project Structure
 
@@ -22,12 +22,13 @@ This is a full-stack voice AI assistant application featuring real-time voice in
 │   ├── src/
 │   │   ├── config/     # Environment configuration
 │   │   ├── controllers/
-│   │   ├── db/         # SQLite database client
+│   │   ├── db/         # Database client (PostgreSQL with Drizzle ORM)
 │   │   ├── middleware/
 │   │   ├── routes/
 │   │   ├── services/   # LLM and voice session services
 │   │   └── ws/         # WebSocket gateway
-│   └── migrations/     # Database migrations
+├── shared/             # Shared schema and types
+│   └── schema.ts       # Drizzle database schema
 └── package.json        # Root workspace config
 ```
 
@@ -38,14 +39,23 @@ The application has been configured to run in the Replit environment:
 - ✅ Dependencies installed and built for Node.js 20
 - ✅ Frontend configured to run on port 5000 (required for Replit)
 - ✅ Backend running on port 4000
-- ✅ SQLite database configured (ignoring Replit's default PostgreSQL)
+- ✅ PostgreSQL database configured with Drizzle ORM
 - ✅ WebSocket communication configured
 - ✅ Mock LLM mode enabled by default
 - ✅ Deployment configuration set up
 
 ## Recent Changes
 
-**Date**: November 8, 2024
+**Date**: November 8, 2025
+
+1. **Database Migration to PostgreSQL**:
+   - Migrated from SQLite to Replit's built-in PostgreSQL database
+   - Implemented Drizzle ORM for type-safe database access
+   - Created shared schema package for database types
+   - Updated all database operations to use async/await pattern
+   - Added `npm run db:push` command for schema migrations
+
+**Previous Changes - November 8, 2024**
 
 1. **Port Configuration**: Updated frontend from port 5173 to port 5000 for Replit compatibility
 2. **HMR Setup**: Added HMR client port configuration for hot module reloading
@@ -55,8 +65,6 @@ The application has been configured to run in the Replit environment:
    - Automatically detects REPLIT_DEV_DOMAIN or REPLIT_DOMAINS for CLIENT_ORIGIN
    - Falls back to localhost:5000 for local development
    - Client uses relative URLs for API and WebSocket connections (proxied through Vite)
-6. **Database Configuration**: Modified to use SQLite instead of Replit's default PostgreSQL
-7. **Build Fixes**: Rebuilt better-sqlite3 native module for Node.js 20 compatibility
 
 ## Environment Variables
 
@@ -104,7 +112,7 @@ The app currently runs in mock mode. To enable real AI voice processing:
 
 - **Frontend**: React 19, TypeScript, Vite, Socket.IO Client
 - **Backend**: Node.js 20, Express, Socket.IO, TypeScript
-- **Database**: SQLite (better-sqlite3)
+- **Database**: PostgreSQL (Neon) with Drizzle ORM
 - **AI**: Google Gemini API (@google/genai)
 - **Build**: TypeScript, Vite
 
@@ -118,8 +126,17 @@ The application is configured to deploy as a VM (stateful) deployment:
 
 ## Architecture Notes
 
-- Uses monorepo structure with npm workspaces
+- Uses monorepo structure with npm workspaces (client, server, shared)
 - WebSocket gateway handles voice streaming
-- Session data persists to SQLite database
+- Session data persists to PostgreSQL database using Drizzle ORM
 - Supports both mock and real LLM services
 - Frontend proxies API requests to backend via Vite dev server in development
+
+## Database Management
+
+The application uses Drizzle ORM for database schema management:
+
+- **Schema**: Define tables in `shared/schema.ts`
+- **Migration**: Run `npm run db:push` to sync schema to database
+- **Force Migration**: Use `npm run db:push --force` if needed for data-loss changes
+- **Environment**: DATABASE_URL automatically set by Replit

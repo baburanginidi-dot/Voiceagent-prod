@@ -1,12 +1,9 @@
 import http from 'node:http';
 import app from './app.js';
 import { env } from './config/env.js';
-import { runMigrations } from './db/migrator.js';
 import { attachVoiceGateway } from './ws/voiceGateway.js';
 
 const bootstrap = async () => {
-  runMigrations();
-
   const server = http.createServer(app);
   attachVoiceGateway(server);
 

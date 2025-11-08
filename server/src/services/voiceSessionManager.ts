@@ -29,7 +29,7 @@ export class VoiceSessionManager {
     context.chunks.push(chunk);
     this.contexts.set(sessionId, context);
 
-    upsertMessage(sessionId, 'user', undefined, chunk.toString('base64'));
+    await upsertMessage(sessionId, 'user', undefined, chunk.toString('base64'));
 
     if (!context.processing) {
       this.process(sessionId, context).catch((error) => {
@@ -43,12 +43,12 @@ export class VoiceSessionManager {
     context.processing = true;
     while (context.chunks.length > 0) {
       const chunk = Buffer.concat(context.chunks.splice(0));
-      const session = getSession(sessionId);
+      const session = await getSession(sessionId);
       if (!session) {
         break;
       }
 
-      const history = getMessages(sessionId, 100);
+      const history = await getMessages(sessionId, 100);
 
       for await (const event of this.llm.stream({
         sessionId,
@@ -58,7 +58,7 @@ export class VoiceSessionManager {
         history,
       })) {
         if (event.type === 'transcript') {
-          const message = upsertMessage(sessionId, 'agent', event.text);
+          const message = await upsertMessage(sessionId, 'agent', event.text);
           this.io.to(sessionId).emit('server:transcript', {
             speaker: 'agent',
             text: event.text,
@@ -68,7 +68,7 @@ export class VoiceSessionManager {
         }
 
         if (event.type === 'audio') {
-          upsertMessage(sessionId, 'agent', undefined, event.audio.toString('base64'));
+          await upsertMessage(sessionId, 'agent', undefined, event.audio.toString('base64'));
           const uint8 = event.audio instanceof Buffer ? event.audio : Buffer.from(event.audio);
           this.io.to(sessionId).emit('server:agent_audio', {
             audio: uint8.buffer.slice(uint8.byteOffset, uint8.byteOffset + uint8.byteLength),
