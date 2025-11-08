@@ -21,10 +21,20 @@ const bool = (value: string | undefined, fallback: boolean) => {
   return ['1', 'true', 'TRUE'].includes(value);
 };
 
+const getClientOrigin = () => {
+  if (process.env.CLIENT_ORIGIN) {
+    return process.env.CLIENT_ORIGIN;
+  }
+  if (process.env.REPLIT_DOMAINS) {
+    return `https://${process.env.REPLIT_DOMAINS}`;
+  }
+  return 'http://localhost:5000';
+};
+
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? 'development',
   port: number(process.env.PORT, 4000),
-  clientOrigin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
+  clientOrigin: getClientOrigin(),
   geminiApiKey: process.env.GEMINI_API_KEY,
   geminiModel: process.env.GEMINI_MODEL ?? 'gemini-1.5-pro-latest',
   jwtSecret: process.env.JWT_SECRET ?? 'dev-secret',
