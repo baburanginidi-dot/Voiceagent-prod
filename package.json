@@ -1,22 +1,33 @@
 {
-  "name": "maya-voice-agent-onboarding",
+  "name": "voiceagent-prod",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+  "version": "1.0.0",
+  "description": "Full-stack voice agent with thin client and Node server",
+  "engines": {
+    "node": ">=18"
   },
-  "dependencies": {
-    "react": "^19.2.0",
-    "@google/genai": "^1.29.0",
-    "react-dom": "^19.2.0"
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n server,client \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "npm --prefix server run build",
+    "build:client": "npm --prefix client run build",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "npm --prefix server run test",
+    "test:client": "npm --prefix client run test",
+    "lint": "npm run lint:server && npm run lint:client",
+    "lint:server": "npm --prefix server run lint",
+    "lint:client": "npm --prefix client run lint",
+    "docker": "docker-compose up --build",
+    "docker:down": "docker-compose down"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "concurrently": "^9.1.0"
   }
 }
+
