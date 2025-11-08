@@ -31,6 +31,14 @@ const getClientOrigin = () => {
   return 'http://localhost:5000';
 };
 
+const getDatabaseUrl = () => {
+  const dbUrl = process.env.DATABASE_URL;
+  if (!dbUrl || dbUrl.startsWith('postgresql://')) {
+    return 'file:./data/dev.db';
+  }
+  return dbUrl;
+};
+
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? 'development',
   port: number(process.env.PORT, 4000),
@@ -38,7 +46,7 @@ export const env = {
   geminiApiKey: process.env.GEMINI_API_KEY,
   geminiModel: process.env.GEMINI_MODEL ?? 'gemini-1.5-pro-latest',
   jwtSecret: process.env.JWT_SECRET ?? 'dev-secret',
-  databaseUrl: process.env.DATABASE_URL ?? 'file:./data/dev.db',
+  databaseUrl: getDatabaseUrl(),
   serverApiKey: process.env.SERVER_API_KEY ?? 'dev-admin-key',
   rateLimitWindowMs: number(process.env.RATE_LIMIT_WINDOW_MS, 60_000),
   rateLimitMax: number(process.env.RATE_LIMIT_MAX, 60),
