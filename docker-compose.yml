@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./server/data:/app/server/data
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      args:
+        VITE_API_BASE_URL: http://server:4000
+        VITE_SOCKET_URL: http://server:4000
+    ports:
+      - '5173:4173'
+    depends_on:
+      - server

@@ -5,23 +5,20 @@ import VoiceVisualizer from './VoiceVisualizer';
 import Controls from './Controls';
 import TranscriptionPanel from './TranscriptionPanel';
 import { useConversationManager } from '../hooks/useConversationManager';
-import type { User, StageId, Message } from '../types';
+import type { Session } from '../types';
 
 interface MainScreenProps {
-  user: User;
-  initialStageId: StageId;
-  initialTranscripts: Message[];
+  session: Session;
+  token: string;
   onLogout: () => void;
 }
 
-const MainScreen: React.FC<MainScreenProps> = ({ user, initialStageId, initialTranscripts, onLogout }) => {
-  const { 
-    agentState, 
-    isMuted, 
-    transcripts, 
-    currentStageId, 
-    toggleMute, 
-  } = useConversationManager(user, initialStageId, initialTranscripts);
+const MainScreen: React.FC<MainScreenProps> = ({ session, token, onLogout }) => {
+  const { agentState, isMuted, transcripts, currentStageId, toggleMute } = useConversationManager({
+    sessionId: session.id,
+    token,
+    initialStageId: session.currentStageId,
+  });
   
   const handleEndCall = () => {
     // Calling onLogout will unmount the component.
@@ -31,7 +28,11 @@ const MainScreen: React.FC<MainScreenProps> = ({ user, initialStageId, initialTr
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      <header className="p-4 border-b border-[#E2E8F0] bg-white/80 backdrop-blur-sm">
+      <header className="p-4 border-b border-[#E2E8F0] bg-white/80 backdrop-blur-sm flex items-center justify-between">
+         <div>
+           <p className="text-sm text-slate-500">Connected as</p>
+           <p className="font-semibold text-slate-800">{session.userName}</p>
+         </div>
          <Stepper currentStageId={currentStageId} />
       </header>
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 p-6 overflow-hidden">
